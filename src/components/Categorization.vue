@@ -1,13 +1,13 @@
 <template>
     <div>
         <h2 class="title">{{ title }}</h2>
-        <input type=text v-model="searchText"/>
-        <category-list :categoryList="filteredCategoryList" />
+        <input v-if="isSearchable" :disabled="isSearchLocked" type=text v-model="searchText"/>
+        <product-list :products="filteredProducts" :itemSelectionHandler="itemSelectionHandler"/>
     </div>
 </template>
 
 <script>
-import CategoryList from '@/components/CategoryList.vue'
+import ProductList from '@/components/ProductList.vue'
 
 export default {
     data() {
@@ -15,22 +15,24 @@ export default {
             searchText: '',
         }
     },
-    props: ['title', 'categorization'],
+    props: ['isSearchable', 'isSearchLocked', 'title', 'categorization', 'itemSelectionHandler'],
     computed: {
-        filteredCategoryList() {
-            return this.categorization.filter((category) => {
-                return category.path.some((categoryLabel) => {
-                    return categoryLabel.toLowerCase().includes(this.searchText.toLowerCase());
-                });
+        filteredProducts() {
+            const searchFor = this.searchText.toLowerCase();
+            return this.categorization.filter((product) => {
+                const label = product.label.toLowerCase();
+                return label.includes(searchFor);
             });
         },
     },
     components: {
-        CategoryList,
+        ProductList,
     }
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+    .title {
+        text-align: center;
+    }
 </style>

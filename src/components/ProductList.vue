@@ -1,8 +1,8 @@
 <template>
     <div>
         <ul>
-            <li v-for="(product, productLabel) in products" :key="productLabel">
-                <product :product="product"/>
+            <li v-for="product in products" :key="product.id">
+                <product :product="product" :itemSelectionHandler="itemSelectionHandler"/>
             </li>
         </ul>
     </div>
@@ -12,7 +12,7 @@
 import Product from '@/components/Product.vue'
 
 export default {
-    props: ['products'],
+    props: ['products', 'itemSelectionHandler'],
     components: {
         Product,
     }

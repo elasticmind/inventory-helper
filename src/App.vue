@@ -1,16 +1,13 @@
 <template>
   <div id="app">
-    <board />
+    <router-link to='/store'>Leltár</router-link>
+    <router-link to='/couplings'>Összevonások</router-link>
+    <router-view />
   </div>
 </template>
 
 <script>
-import Board from '@/components/Board';
-
 export default {
-  components: {
-    Board,
-  }
 }
 </script>
 

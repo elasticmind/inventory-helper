@@ -1,4 +1,4 @@
-export function categorize(data) {
+export function listProducts(data) {
     function isLeafCategory(obj) {
         return obj.hasOwnProperty('products');
     }
@@ -6,17 +6,13 @@ export function categorize(data) {
     // TODO: Consider TCO-friendly approach
     function traverse(category, path = [], result = []) {
         if (isLeafCategory(category)) {
-            var products = Object.keys(category.products).map((label) => {
-                    return {
-                        label,
-                        ...category.products[label],
-                    };
+            Object.keys(category.products).forEach((label) => {
+                result.push({
+                    label,
+                    ...category.products[label],
+                    categoryId: category.id,
+                    path,
                 });
-
-            result.push({
-                id: category.id,
-                path,
-                products,
             });
         } else {
             Object.keys(category).forEach((subCategoryLabel) => {
@@ -30,5 +26,11 @@ export function categorize(data) {
         return result;
     }
 
-    return traverse(data);
+    return sortProducts(traverse(data));
+}
+
+export function sortProducts(products) {
+    return products.sort((productA, productB) => {
+        return productA.label.localeCompare(productB.label);
+    });
 }
