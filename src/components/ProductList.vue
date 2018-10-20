@@ -1,11 +1,8 @@
 <template>
     <div>
-        <h2>
-            {{ title }}
-        </h2>
         <ul>
-            <li v-for="(product, index) in products" :key="index">
-                <product :data="product"/>
+            <li v-for="(product, productLabel) in products" :key="productLabel">
+                <product :product="product"/>
             </li>
         </ul>
     </div>
@@ -15,7 +12,7 @@
 import Product from '@/components/Product.vue'
 
 export default {
-    props: ['title', 'products'],
+    props: ['products'],
     components: {
         Product,
     }

@@ -1,19 +1,19 @@
 <template>
     <div class="flex">
-        <product-list
+        <categorization
             title="Surplus"
-            :products="surplus"
+            :categorization="surplus"
             class="width-50" />
-        <product-list
+        <categorization
             title="Shortage"
-            :products="shortage"
+            :categorization="shortage"
             class="width-50" />
     </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
-import ProductList from '@/components/ProductList';
+import Categorization from '@/components/Categorization';
 
 export default {
     computed: {
@@ -23,7 +23,7 @@ export default {
         ])
     },
     components: {
-        ProductList
+        Categorization
     },
 }
 </script>
