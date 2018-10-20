@@ -59,10 +59,6 @@ Kategória: ${joinedPath}`
         background-color: rgba(0, 174, 255, 0.61);
     }
 
-    .product-label {
-        
-    }
-
     .product-count {
         margin-left: auto;
     }
