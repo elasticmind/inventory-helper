@@ -1,0 +1,112 @@
+{
+    "ÉLELMISZER": {
+        "ALAPVETŐ ÉLELMISZEREK": {
+            "CUKOR": {
+                "FEHÉR": {
+                    "KRISTÁLY": {
+                        "id": "002001001002005",
+                        "products": {
+                            "KRISTÁLYCUKOR 1KG": {
+                                "id": "1014112000",
+                                "count": -1739
+                            }
+                        }
+                    },
+                    "POR": {
+                        "id": "002001001002006",
+                        "products": {
+                            "KORONÁS PORCUKOR ZACSKÓS 0.5KG": {
+                                "id": "1013181000",
+                                "count": -3
+                            }
+                        }
+                    }
+                }
+            },
+            "ECET": {
+                "NORMÁL": {
+                    "10%": {
+                        "id": "002001002002001",
+                        "products": {
+                            "CHEF ÉTELECCET 10% 1L": {
+                                "id": "1001218000",
+                                "count": -1
+                            }
+                        }
+                    },
+                    "15%": {
+                        "id": "002001002002002",
+                        "products": {
+                            "CHEF ÉTELECCET 15% 1L": {
+                                "id": "1001221000",
+                                "count": -2
+                            }
+                        }
+                    }
+                }
+            },
+            "LISZT": {
+                "EGYÉB": {
+                    "id": "002001003002",
+                    "products": {
+                        "HALMA FÉLFOGÓS LISZT HBL-42 2KG": {
+                            "id": "1067386000",
+                            "count": -1
+                        }
+                    }
+                }
+            },
+            "MARGARIN": {
+                "CSÉSZÉS": {
+                    "EGYÉB": {
+                        "id": "002001004001001",
+                        "products": {
+                            "COOP LIGHT CSÉSZÉS KEN.NÖV.ZSÍR.32% 500G": {
+                                "id": "1078296000",
+                                "count": -1
+                            },
+                            "DELMA SZENDVICS MARGARIN 20%ZSÍRT. 250G": {
+                                "id": "1258122000",
+                                "count": -1
+                            }
+                        }
+                    }
+                },
+                "CSOMAGOLT": {
+                    "id": "002001004002",
+                    "products": {
+                        "COOP SÜTÉS.ÉS FŐZÉS.KEN.NÖ.ZSÍR 70% 250G": {
+                            "id": "1011495000",
+                            "count": -1
+                        },
+                        "RAMA MARGARIN KOCKA KENH.NÖV.ZSÍR 250G": {
+                            "id": "1013815000",
+                            "count": -2
+                        }
+                    }
+                }
+            },
+            "OLAJ": {
+                "NAPRAFORGÓ": {
+                    "FINOMÍTOTT": {
+                        "id": "002001005001001",
+                        "products": {
+                            "VÉNUSZ NAPRAFORGÓ ÉTOLAJ 1L": {
+                                "id": "1004913000",
+                                "count": -15
+                            },
+                            "KUNSÁGI ÉDEN NAPRAFORGÓ ÉTOLAJ 100% 1L": {
+                                "id": "1044837000",
+                                "count": -2
+                            },
+                            "FLORIOL CARDIO ÉTOLAJ 1L": {
+                                "id": "1404132000",
+                                "count": -1
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

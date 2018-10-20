@@ -1,0 +1,53 @@
+{
+    "ÉLELMISZER": {
+        "ALAPVETŐ ÉLELMISZEREK": {
+            "CUKOR": {
+                "FEHÉR": {
+                    "KRISTÁLY": {
+                        "id": "002001001002005",
+                        "products": {
+                            "KORONÁS KRISTÁLYCUKOR 1KG": {
+                                "id": "1012860000",
+                                "count": 1624
+                            }
+                        }
+                    }
+                }
+            },
+            "MARGARIN": {
+                "CSÉSZÉS": {
+                    "NORMÁL": {
+                        "id": "002001004001003",
+                        "products": {
+                            "FLORA MARGARIN TÉGELYES 500G": {
+                                "id": "1273204000",
+                                "count": 1
+                            }
+                        }
+                    }
+                }
+            },
+            "OLAJ": {
+                "NAPRAFORGÓ": {
+                    "FINOMÍTOTT": {
+                        "id": "002001005001001",
+                        "products": {
+                            "VÉNUSZ NAPRAFORGÓ ÉTOLAJ 2L": {
+                                "id": "1036212000",
+                                "count": 6
+                            },
+                            "COOP NAPRAFORGÓ ÉTOLAJ 1L": {
+                                "id": "1179064000",
+                                "count": 1
+                            },
+                            "KUNSÁGI ÉDEN SZUPER FINOMÍTOTT ÉTOLAJ 1L": {
+                                "id": "1364439000",
+                                "count": 3
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
