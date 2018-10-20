@@ -3,21 +3,19 @@
         <h1>
             Leltár
         </h1>
-        <label for="searchLock">
-            Search Lock
-            <input type="checkbox" id="searchLock" @input="toggleSearchLock">
-        </label>
+        <input type="text" v-model="searchText">
         <div class="flex">
             <categorization
                 title="Többlet"
+                :preFilter="searchText"
                 :isSearchable="true"
                 :categorization="surplus"
                 itemSelectionHandler="selectSurplus"
                 class="half-pane" />
             <categorization
                 title="Hiány"
+                :preFilter="searchText"
                 :isSearchable="true"
-                :isSearchLocked="isSearchLocked"
                 :categorization="shortage"
                 itemSelectionHandler="selectShortage"
                 class="half-pane" />
@@ -50,6 +48,11 @@ import Categorization from '@/components/Categorization';
 import Coupling from '@/components/Coupling';
 
 export default {
+    data() {
+        return {
+            searchText: '',
+        }
+    },
     computed: {
         ...mapState([
             'surplus',
@@ -57,18 +60,12 @@ export default {
             'selectedSurplus',
             'selectedShortage'
         ]),
-        isSearchLocked() {
-            return this.$store.state.commonSearchTerm != null;
-        }
     },
     components: {
         Categorization,
         Coupling
     },
     methods: {
-        toggleSearchLock(event) {
-            this.$store.commit('toggleSearchLock');
-        },
         couple() {
             this.$store.dispatch('couple');
         }

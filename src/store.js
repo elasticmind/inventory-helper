@@ -13,7 +13,6 @@ export default new Vuex.Store({
     // TODO: Consistent naming, ie.: surpluses, selectedSurpluses, etc.
     surplus,
     shortage,
-    commonSearchTerm: null,
     selectedSurplus: [],
     selectedShortage: [],
     couplings: []
@@ -52,13 +51,6 @@ export default new Vuex.Store({
         shortage,
         result
       });
-    },
-    toggleSearchLock: (state, text) => {
-      if (state.commonSearchTerm === null) {
-        state.commonSearchTerm = text;
-      } else {
-        state.commonSearchTerm = null;
-      }
     },
   },
   actions: {
