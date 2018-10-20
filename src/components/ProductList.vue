@@ -1,7 +1,7 @@
 <template>
     <div>
         <ul>
-            <li v-for="product in products" :key="product.id">
+            <li v-for="product in products" :key="product.label">
                 <product :product="product" :itemSelectionHandler="itemSelectionHandler"/>
             </li>
         </ul>
