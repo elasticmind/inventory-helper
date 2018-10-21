@@ -1,7 +1,7 @@
 <template>
     <ul>
         <li v-for="(coupling, index) in couplings" :key="index">
-            <coupling :coupling="coupling" />
+            <coupling :removable="removable" :coupling="coupling" />
         </li>
     </ul>
 </template>
@@ -10,7 +10,7 @@
 import Coupling from '@/components/Coupling';
 
 export default {
-    props: ['couplings'],
+    props: ['couplings', 'filter', 'removable'],
     components: {
         Coupling
     },

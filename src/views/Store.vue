@@ -3,6 +3,7 @@
         <h1>
             Leltár
         </h1>
+        <input type="checkbox" v-model="persistSearch">
         <input type="text" v-model="searchText">
         <div class="flex">
             <categorization
@@ -21,35 +22,23 @@
                 class="half-pane" />
         </div>
         <div class="flex">
-            <categorization
-                title="Kiválasztott"
-                :isSearchable="false"
-                :categorization="selectedSurplus"
-                itemSelectionHandler="selectSurplus"
-                class="half-pane" />
-            <categorization
-                title="Kiválasztott"
-                :isSearchable="false"
-                :categorization="selectedShortage"
-                itemSelectionHandler="selectShortage"
-                class="half-pane" />
+            <button>Összes hozzáadása</button>
+            <button>Összes hozzáadása</button>
         </div>
-        <coupling :coupling="{
-            surplus: selectedSurplus,
-            shortage: selectedShortage,
-        }" />
-        <button @click="couple">Összevon</button>
+        <coupling :coupling="editedCoupling" />
+        <button @click="addCoupling" :disabled="isEditedCouplingEmpty">Összevon</button>
     </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations, mapGetters } from 'vuex';
 import Categorization from '@/components/Categorization';
 import Coupling from '@/components/Coupling';
 
 export default {
     data() {
         return {
+            persistSearch: false,
             searchText: '',
         }
     },
@@ -57,18 +46,25 @@ export default {
         ...mapState([
             'surplus',
             'shortage',
-            'selectedSurplus',
-            'selectedShortage'
+            'editedCoupling',
         ]),
+        ...mapGetters([
+            'isEditedCouplingEmpty'
+        ]),
+    },
+    watch: {
+        isEditedCouplingEmpty(changedTo) {
+            if (!this.persistSearch && changedTo) {
+                this.searchText = '';
+            }
+        }
     },
     components: {
         Categorization,
         Coupling
     },
     methods: {
-        couple() {
-            this.$store.dispatch('couple');
-        }
+        ...mapMutations(['addCoupling']),
     }
 }
 </script>

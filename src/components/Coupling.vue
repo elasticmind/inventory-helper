@@ -1,35 +1,49 @@
 <template>
     <div class="wrapper">
+        <button v-if="removable" @click="removeCoupling(coupling)">Törlés</button>
         <div class="item">
             <h2>
                 Többlet
             </h2>
-            <product-list :products="coupling.surplus" />
+            <product-list :products="coupling.surplus" itemSelectionHandler="selectSurplus"/>
         </div>
         <div class="item">
             <h2>
                 Hiány
             </h2>
-            <product-list :products="coupling.shortage" />
+            <product-list :products="coupling.shortage" itemSelectionHandler="selectShortage"/>
         </div>
         <hr>
         <div class="result">
             <h2>
                 Eredmény
             </h2>
-            {{ coupling.result }}
+            {{ result }}
         </div>
     </div>
 </template>
 
 <script>
 import ProductList from '@/components/ProductList';
+import { mapMutations } from 'vuex';
+
+function sumProducts(products) {
+  return products.reduce((sum, product) => sum + product.count, 0);
+}
 
 export default {
-    props: ['coupling'],
+    props: ['coupling', 'removable'],
     components: {
         ProductList,
     },
+    computed: {
+        result() {
+            return sumProducts(this.coupling.surplus) + sumProducts(this.coupling.shortage);
+        }
+    },
+    methods: {
+        ...mapMutations(['removeCoupling']),
+    }
 }
 </script>
 

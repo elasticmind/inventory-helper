@@ -1,6 +1,7 @@
 <template>
     <div>
-        <h2 class="title">{{ title }}</h2>
+        <h2 class="title">{{ title }}({{ categorization.length }})</h2>
+        <input type="checkbox" v-model="persistSearch">
         <input
             v-if="isSearchable"
             type=text
@@ -10,33 +11,33 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapGetters } from 'vuex';
+import { searchProducts } from '@/util/productsController';
 import ProductList from '@/components/ProductList.vue'
 
 export default {
     data() {
         return {
+            // TODO: Consider using a mixin (with Store)
+            persistSearch: false,
             searchText: '',
         }
     },
-    props: {
-        title: {},
-        isSearchable: {},
-        categorization: {},
-        itemSelectionHandler: {},
-        preFilter: {
-            default: '',
-        }
-    },
+    props: ['title', 'isSearchable', 'categorization', 'itemSelectionHandler', 'preFilter'],
     computed: {
         filteredProducts() {
-            const preFilter = this.preFilter.toLowerCase();
-            const searchText = this.searchText.toLowerCase();
-            return this.categorization.filter((product) => {
-                const label = product.label.toLowerCase();
-                return label.includes(preFilter) && label.includes(searchText);
-            });
+            return searchProducts(this.categorization, `${this.preFilter} ${this.searchText}`)
         },
+        ...mapGetters([
+            'isEditedCouplingEmpty'
+        ]),
+    },
+    watch: {
+        isEditedCouplingEmpty(changedTo) {
+            if (!this.persistSearch && changedTo) {
+                this.searchText = '';
+            }
+        }
     },
     components: {
         ProductList,

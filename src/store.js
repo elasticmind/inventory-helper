@@ -13,58 +13,49 @@ export default new Vuex.Store({
     // TODO: Consistent naming, ie.: surpluses, selectedSurpluses, etc.
     surplus,
     shortage,
-    selectedSurplus: [],
-    selectedShortage: [],
+    editedCoupling: {
+      surplus: [],
+      shortage: [],
+    },
     couplings: []
   },
-  getters: {},
-  mutations: {
-    selectSurplus: (state, product) => {
-      toggleSelection(state.selectedSurplus, product);
-      sortProducts(state.selectedSurplus);
-    },
-    selectShortage: (state, product) => {
-      toggleSelection(state.selectedShortage, product);
-      sortProducts(state.selectedShortage);
-    },
-    refreshSurplus: (state) => {
-      state.selectedSurplus.forEach((toRemove) => {
-        state.surplus.splice(state.surplus.indexOf(toRemove), 1);
-      });
-    },
-    refreshShortage: (state) => {
-      state.selectedShortage.forEach((toRemove) => {
-        state.shortage.splice(state.shortage.indexOf(toRemove), 1);
-      });
-    },
-    resetSurplusSelection: (state) => {
-      state.selectedSurplus = [];
-    },
-    resetShortageSelection: (state) => {
-      state.selectedShortage = [];
-    },
-    addCoupling: (state, { surplus, shortage }) => {
-      const result = sumProducts(surplus) + sumProducts(shortage);
-
-      state.couplings.push({
-        surplus,
-        shortage,
-        result
-      });
+  getters: {
+    isEditedCouplingEmpty: (state) => {
+      return state.editedCoupling.surplus.length === 0
+        && state.editedCoupling.shortage.length === 0;
     },
   },
-  actions: {
-    couple: ({state, commit}) => {
-      commit('addCoupling', {
-        surplus: state.selectedSurplus,
-        shortage: state.selectedShortage
-      });
-      commit('refreshSurplus');
-      commit('refreshShortage');
-      commit('resetSurplusSelection');
-      commit('resetShortageSelection');
-    }
-  }
+  mutations: {
+    selectSurplus: (state, product) => {
+      toggleSelection(state.surplus, product);
+      sortProducts(state.surplus);
+      toggleSelection(state.editedCoupling.surplus, product);
+      sortProducts(state.editedCoupling.surplus);
+    },
+    selectShortage: (state, product) => {
+      toggleSelection(state.shortage, product);
+      sortProducts(state.shortage);
+      toggleSelection(state.editedCoupling.shortage, product);
+      sortProducts(state.editedCoupling.shortage);
+    },
+    addCoupling: (state) => {
+      state.couplings.push(state.editedCoupling);
+      state.editedCoupling = {
+        surplus: [],
+        shortage: [],
+      };
+    },
+    removeCoupling: (state, coupling) => {
+      var index;
+      if (~(index = state.couplings.indexOf(coupling))) {
+        state.couplings.splice(index, 1);
+        state.surplus.push(...coupling.surplus);
+        state.shortage.push(...coupling.shortage);
+        sortProducts(state.surplus);
+        sortProducts(state.shortage);
+      }
+    },
+  },
 })
 
 function toggleSelection(array, item) {
@@ -74,8 +65,4 @@ function toggleSelection(array, item) {
   } else {
     array.push(item);
   }
-}
-
-function sumProducts(products) {
-  return products.reduce((sum, product) => sum + product.count, 0);
 }
