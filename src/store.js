@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
 
+import { searchProducts, hasProducts } from '@/util/productsController';
+
 import { listProducts, sortProducts } from '@/util/dataTransformer.js'
 import shortageData from '@/data/shortage.json'
 import surplusData from '@/data/surplus.json'
@@ -10,40 +12,83 @@ const surplus = listProducts(surplusData);
 
 export default new Vuex.Store({
   state: {
-    // TODO: Consistent naming, ie.: surpluses, selectedSurpluses, etc.
-    surplus,
-    shortage,
-    editedCoupling: {
-      surplus: [],
-      shortage: [],
+    preFilter: '',
+    surplus: {
+      products: surplus,
+      filter: '',
+      selected: [],
     },
-    couplings: []
+    shortage: {
+      products: shortage,
+      filter: '',
+      selected: [],
+    },
+    couplings: {
+      items: [],
+      filter: '',
+    },
   },
   getters: {
-    isEditedCouplingEmpty: (state) => {
-      return state.editedCoupling.surplus.length === 0
-        && state.editedCoupling.shortage.length === 0;
+    products: (state) => (categorization) => {
+      return state[categorization].products;
     },
+    selectedProducts: (state) => (categorization) => {
+      return state[categorization].selected;
+    },
+    filter: (state) => (categorization) => {
+      return state[categorization].filter;
+    },
+    productsCount: (state, getters) => (categorization) => {
+      return getters.products(categorization).length;
+    },
+    filteredProducts: (state, getters) => (categorization) => {
+      return searchProducts(
+        getters.products(categorization),
+        `${state.preFilter} ${getters.filter(categorization)}`
+      );
+    },
+    isProductSelected: (state) => {
+      return state.surplus.selected.length + state.shortage.selected.length > 0;
+    },
+    couplingsCount: (state) => {
+      return state.couplings.length;
+    },
+    filteredCouplings: (state) => {
+      return state.couplings.items.filter((coupling) => {
+        return hasProducts(coupling.surplusProducts, state.couplings.filter.toLowerCase())
+          || hasProducts(coupling.shortageProducts, state.couplings.filter.toLowerCase());
+      });
+    }
   },
   mutations: {
-    selectSurplus: (state, product) => {
-      toggleSelection(state.surplus, product);
-      sortProducts(state.surplus);
-      toggleSelection(state.editedCoupling.surplus, product);
-      sortProducts(state.editedCoupling.surplus);
+    setFilter: (state, { categorization, filter }) => {
+      state[categorization].filter = filter;
     },
-    selectShortage: (state, product) => {
-      toggleSelection(state.shortage, product);
-      sortProducts(state.shortage);
-      toggleSelection(state.editedCoupling.shortage, product);
-      sortProducts(state.editedCoupling.shortage);
+    setPreFilter: (state, { filter }) => {
+      state.preFilter = filter;
     },
+    toggleProductSelection: (state, {categorization, product}) => {
+      toggleSelection(state[categorization].products, product);
+      toggleSelection(state[categorization].selected, product);
+    },
+
     addCoupling: (state) => {
-      state.couplings.push(state.editedCoupling);
-      state.editedCoupling = {
-        surplus: [],
-        shortage: [],
-      };
+      state.couplings.items.push({
+        surplusProducts: state.surplus.selected,
+        shortageProducts: state.shortage.selected,
+      });
+
+      state.surplus.selected = [];
+      state.shortage.selected = [];
+    },
+
+    addFilteredSurplus: (state, getters) => {
+      state.editedCoupling.surplus.push(getters.filteredSurplusProducts);
+      removeItems(state.surplus, getters.filteredSurplusProducts);
+    },
+    addFilteredShortage: (state, getters) => {
+      state.editedCoupling.shortage.push(getters.filteredShortageProducts);
+      removeItems(state.shortage, getters.filteredShortageProducts);
     },
     removeCoupling: (state, coupling) => {
       var index;
@@ -65,4 +110,13 @@ function toggleSelection(array, item) {
   } else {
     array.push(item);
   }
+}
+
+function removeItems(array, items) {
+  var index;
+  items.forEach((item) => {
+    if (~(index = array.indexOf(item))) {
+      array.splice(index, 1);
+    }
+  });
 }

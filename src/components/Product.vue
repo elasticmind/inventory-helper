@@ -1,9 +1,8 @@
 <template>
     <div
         class="item hover-highlight"
-        :class="{'selected': isSelected}"
-        @click="toggleSelected"
-        :title="tooltip">
+        :title="tooltip"
+        @click="clickHandler(product)" >
         <div class="product-label">{{ product.label }}</div>
         <div class="product-count">{{ product.count }}</div>
     </div>
@@ -11,12 +10,7 @@
 
 <script>
 export default {
-    props: ['product', 'itemSelectionHandler'],
-    data() {
-        return {
-            isSelected: false,
-        }
-    },
+    props: ['product', 'clickHandler'],
     computed: {
         tooltip() {
             const joinedPath = this.product.path.join('\\');
@@ -25,14 +19,6 @@ export default {
 Kategória azonosító: ${this.product.categoryId}
 Kategória: ${joinedPath}`
             );
-        }
-    },
-    methods: {
-        toggleSelected() {
-            this.isSelected = !this.isSelected;
-            if (this.itemSelectionHandler) {
-                this.$store.commit(this.itemSelectionHandler, this.product);
-            }
         }
     },
 }
@@ -53,10 +39,6 @@ Kategória: ${joinedPath}`
         top: 0;
         left: 0;
         background-color: rgba(0, 0, 0, 0.1);
-    }
-
-    .selected {
-        background-color: rgba(0, 174, 255, 0.61);
     }
 
     .product-count {

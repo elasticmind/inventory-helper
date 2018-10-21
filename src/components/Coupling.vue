@@ -5,13 +5,17 @@
             <h2>
                 Többlet
             </h2>
-            <product-list :products="coupling.surplus" itemSelectionHandler="selectSurplus"/>
+            <product-list
+                :products="coupling.surplusProducts"
+                :productClickHandler="toggleProductSelection('surplus')"/>
         </div>
         <div class="item">
             <h2>
                 Hiány
             </h2>
-            <product-list :products="coupling.shortage" itemSelectionHandler="selectShortage"/>
+            <product-list
+                :products="coupling.shortageProducts"
+                :productClickHandler="toggleProductSelection('shortage')"/>
         </div>
         <hr>
         <div class="result">
@@ -38,12 +42,19 @@ export default {
     },
     computed: {
         result() {
-            return sumProducts(this.coupling.surplus) + sumProducts(this.coupling.shortage);
+            return sumProducts(this.coupling.surplusProducts) + sumProducts(this.coupling.shortageProducts);
         }
     },
     methods: {
-        ...mapMutations(['removeCoupling']),
-    }
+        ...mapMutations([
+            'removeCoupling'
+        ]),
+        toggleProductSelection(categorization) {
+            return function(product) {
+                this.$store.commit('toggleProductSelection', { categorization, product });
+            }
+        }
+    },
 }
 </script>
 

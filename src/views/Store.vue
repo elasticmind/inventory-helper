@@ -8,30 +8,24 @@
         <div class="flex">
             <categorization
                 title="Többlet"
-                :preFilter="searchText"
-                :isSearchable="true"
-                :categorization="surplus"
-                itemSelectionHandler="selectSurplus"
+                categorization="surplus"
                 class="half-pane" />
             <categorization
                 title="Hiány"
-                :preFilter="searchText"
-                :isSearchable="true"
-                :categorization="shortage"
-                itemSelectionHandler="selectShortage"
+                categorization="shortage"
                 class="half-pane" />
         </div>
         <div class="flex">
-            <button>Összes hozzáadása</button>
-            <button>Összes hozzáadása</button>
+            <button @click="addFilteredSurplus">Összes hozzáadása</button>
+            <button @click="addFilteredShortage">Összes hozzáadása</button>
         </div>
-        <coupling :coupling="editedCoupling" />
-        <button @click="addCoupling" :disabled="isEditedCouplingEmpty">Összevon</button>
+        <coupling :coupling="coupling" />
+        <button @click="addCoupling" :disabled="!isProductSelected">Összevon</button>
     </div>
 </template>
 
 <script>
-import { mapState, mapMutations, mapGetters } from 'vuex';
+import { mapGetters, mapMutations, mapState } from 'vuex';
 import Categorization from '@/components/Categorization';
 import Coupling from '@/components/Coupling';
 
@@ -39,21 +33,31 @@ export default {
     data() {
         return {
             persistSearch: false,
-            searchText: '',
-        }
+        };
     },
     computed: {
-        ...mapState([
-            'surplus',
-            'shortage',
-            'editedCoupling',
-        ]),
+        ...mapState(['preFilter']),
         ...mapGetters([
-            'isEditedCouplingEmpty'
+            'selectedProducts',
+            'isProductSelected'
         ]),
+        coupling() {
+            return {
+                surplusProducts: this.selectedProducts('surplus'),
+                shortageProducts: this.selectedProducts('shortage')
+            };
+        },
+        searchText: {
+            get() {
+                return this.preFilter;
+            },
+            set(filter) {
+                this.$store.commit('setPreFilter', { filter });
+            }
+        }
     },
     watch: {
-        isEditedCouplingEmpty(changedTo) {
+        isProductSelected(changedTo) {
             if (!this.persistSearch && changedTo) {
                 this.searchText = '';
             }
@@ -64,7 +68,15 @@ export default {
         Coupling
     },
     methods: {
-        ...mapMutations(['addCoupling']),
+        ...mapGetters([
+            'filteredSurplus',
+            'filteredShortage'
+        ]),
+        ...mapMutations([
+            'addCoupling',
+            'addFilteredSurplus',
+            'addFilteredShortage'
+        ]),
     }
 }
 </script>

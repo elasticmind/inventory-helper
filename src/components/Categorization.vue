@@ -1,47 +1,63 @@
 <template>
     <div>
-        <h2 class="title">{{ title }}({{ categorization.length }})</h2>
+        <h2 class="title">{{ title }}({{ productsCount(categorization) }})</h2>
         <input type="checkbox" v-model="persistSearch">
         <input
-            v-if="isSearchable"
             type=text
             v-model="searchText"/>
-        <product-list :products="filteredProducts" :itemSelectionHandler="itemSelectionHandler"/>
+        <product-list
+            :products="filteredProducts(categorization)"
+            :productClickHandler="toggleProductSelection(categorization)" />
     </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import { searchProducts } from '@/util/productsController';
 import ProductList from '@/components/ProductList.vue'
+import { mapGetters } from 'vuex';
 
 export default {
+    props: ['title', 'categorization', 'preFilter'],
     data() {
         return {
-            // TODO: Consider using a mixin (with Store)
             persistSearch: false,
-            searchText: '',
+        };
+    },
+    computed: {
+        ...mapGetters([
+            'productsCount',
+            'filter',
+            'isProductSelected',
+            'filteredProducts'
+        ]),
+        searchText: {
+            get() {
+                return this.filter(this.categorization);
+            },
+            set(filter) {
+                this.$store.commit('setFilter', {
+                    categorization: this.categorization,
+                    filter,
+                });
+            }
         }
     },
-    props: ['title', 'isSearchable', 'categorization', 'itemSelectionHandler', 'preFilter'],
-    computed: {
-        filteredProducts() {
-            return searchProducts(this.categorization, `${this.preFilter} ${this.searchText}`)
-        },
-        ...mapGetters([
-            'isEditedCouplingEmpty'
-        ]),
-    },
-    watch: {
-        isEditedCouplingEmpty(changedTo) {
-            if (!this.persistSearch && changedTo) {
-                this.searchText = '';
+    methods: {
+        toggleProductSelection(categorization) {
+            return function(product) {
+                this.$store.commit('toggleProductSelection', { categorization, product });
             }
         }
     },
     components: {
         ProductList,
-    }
+    },
+    watch: {
+        isProductSelected(changedTo) {
+            if (!this.persistSearch && changedTo) {
+                this.searchText = '';
+            }
+        }
+    },
 }
 </script>
 

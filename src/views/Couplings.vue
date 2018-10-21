@@ -1,38 +1,36 @@
 <template>
     <div>
         <h1>
-            Összevonások({{ couplings.length }})
+            Összevonások({{ couplingsCount }})
         </h1>
         <input
             type=text
             v-model="searchText"/>
-        <coupling-list :removable="true" :couplings="filteredCouplings" :filter="searchText" />
+        <coupling-list :removable="true" :couplings="filteredCouplings" />
     </div>
 </template>
 
 <script>
-import { hasProducts } from '@/util/productsController';
-import { mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 import CouplingList from '@/components/CouplingList';
 
 export default {
-    data() {
-        return {
-            searchText: '',
-        }
-    },
     computed: {
-        ...mapState([
-            'couplings'
+        ...mapGetters([
+            'filteredCouplings',
+            'couplingsCount'
         ]),
-        filteredCouplings() {
-            // TODO: Try to simplify this with Categorization.vue
-            const searchText = this.searchText.toLowerCase();
-            return this.couplings.filter((coupling) => {
-                return hasProducts(coupling.surplus, searchText)
-                  || hasProducts(coupling.shortage, searchText);
-            });
-        },
+        searchText: {
+            get() {
+                return this.$store.state.couplings.filter;
+            },
+            set(filter) {
+                this.$store.commit('setFilter', {
+                    categorization: 'couplings',
+                    filter
+                });
+            }
+        }
     },
     components: {
         CouplingList
