@@ -42,6 +42,8 @@ export default new Vuex.Store({
       return getters.products(categorization).length;
     },
     filteredProducts: (state, getters) => (categorization) => {
+      console.log('státe', state);
+      console.log('lö categorization', categorization);
       return searchProducts(
         getters.products(categorization),
         `${state.preFilter} ${getters.filter(categorization)}`
@@ -70,8 +72,9 @@ export default new Vuex.Store({
     toggleProductSelection: (state, {categorization, product}) => {
       toggleSelection(state[categorization].products, product);
       toggleSelection(state[categorization].selected, product);
+      sortProducts(state[categorization].products);
+      sortProducts(state[categorization].selected);
     },
-
     addCoupling: (state) => {
       state.couplings.items.push({
         surplusProducts: state.surplus.selected,
@@ -81,24 +84,30 @@ export default new Vuex.Store({
       state.surplus.selected = [];
       state.shortage.selected = [];
     },
-
-    addFilteredSurplus: (state, getters) => {
-      state.editedCoupling.surplus.push(getters.filteredSurplusProducts);
-      removeItems(state.surplus, getters.filteredSurplusProducts);
-    },
-    addFilteredShortage: (state, getters) => {
-      state.editedCoupling.shortage.push(getters.filteredShortageProducts);
-      removeItems(state.shortage, getters.filteredShortageProducts);
-    },
     removeCoupling: (state, coupling) => {
       var index;
-      if (~(index = state.couplings.indexOf(coupling))) {
-        state.couplings.splice(index, 1);
-        state.surplus.push(...coupling.surplus);
-        state.shortage.push(...coupling.shortage);
-        sortProducts(state.surplus);
-        sortProducts(state.shortage);
+      if (~(index = state.couplings.items.indexOf(coupling))) {
+        state.couplings.items.splice(index, 1);
+        state.surplus.products.push(...coupling.surplusProducts);
+        state.shortage.products.push(...coupling.shortageProducts);
+        sortProducts(state.surplus.products);
+        sortProducts(state.shortage.products);
       }
+    },
+  },
+  actions: {
+    toggleProductsSelection: ({commit}, {categorization, products}) => {
+      products.forEach((product) => {
+        commit('toggleProductSelection', {categorization, product})
+      });
+    },
+    addFilteredProducts: ({getters, dispatch}, categorization) => {
+      console.log('durvul', categorization);
+      var products = getters.filteredProducts(categorization);
+      dispatch('toggleProductsSelection', {
+        categorization,
+        products,
+      })
     },
   },
 })
@@ -110,13 +119,4 @@ function toggleSelection(array, item) {
   } else {
     array.push(item);
   }
-}
-
-function removeItems(array, items) {
-  var index;
-  items.forEach((item) => {
-    if (~(index = array.indexOf(item))) {
-      array.splice(index, 1);
-    }
-  });
 }

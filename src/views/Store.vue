@@ -16,8 +16,8 @@
                 class="half-pane" />
         </div>
         <div class="flex">
-            <button @click="addFilteredSurplus">Összes hozzáadása</button>
-            <button @click="addFilteredShortage">Összes hozzáadása</button>
+            <button @click="() => addFilteredProducts('surplus')">Összes hozzáadása</button>
+            <button @click="() => addFilteredProducts('shortage')">Összes hozzáadása</button>
         </div>
         <coupling :coupling="coupling" />
         <button @click="addCoupling" :disabled="!isProductSelected">Összevon</button>
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapGetters, mapMutations, mapState, mapActions } from 'vuex';
 import Categorization from '@/components/Categorization';
 import Coupling from '@/components/Coupling';
 
@@ -74,8 +74,9 @@ export default {
         ]),
         ...mapMutations([
             'addCoupling',
-            'addFilteredSurplus',
-            'addFilteredShortage'
+        ]),
+        ...mapActions([
+            'addFilteredProducts',
         ]),
     }
 }

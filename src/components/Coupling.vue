@@ -3,19 +3,19 @@
         <button v-if="removable" @click="removeCoupling(coupling)">Törlés</button>
         <div class="item">
             <h2>
-                Többlet
+                Többlet({{ coupling.shortageProducts.length }})
             </h2>
             <product-list
                 :products="coupling.surplusProducts"
-                :productClickHandler="toggleProductSelection('surplus')"/>
+                :productClickHandler="!removable ? toggleProductSelection('surplus') : () => {}"/>
         </div>
         <div class="item">
             <h2>
-                Hiány
+                Hiány({{ coupling.shortageProducts.length }})
             </h2>
             <product-list
                 :products="coupling.shortageProducts"
-                :productClickHandler="toggleProductSelection('shortage')"/>
+                :productClickHandler="!removable ? toggleProductSelection('shortage') : () => {}"/>
         </div>
         <hr>
         <div class="result">
