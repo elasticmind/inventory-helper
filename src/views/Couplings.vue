@@ -1,8 +1,5 @@
 <template>
     <div>
-        <h1>
-            Összevonások({{ couplingsCount }})
-        </h1>
         <input
             type=text
             v-model="searchText"/>
@@ -11,33 +8,38 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import CouplingList from '@/components/CouplingList';
+import { mapGetters } from "vuex";
+import CouplingList from "@/components/CouplingList";
 
 export default {
-    computed: {
-        ...mapGetters([
-            'filteredCouplings',
-            'couplingsCount'
-        ]),
-        searchText: {
-            get() {
-                return this.$store.state.couplings.filter;
-            },
-            set(filter) {
-                this.$store.commit('setFilter', {
-                    categorization: 'couplings',
-                    filter
-                });
-            }
-        }
-    },
-    components: {
-        CouplingList
-    },
-}
+  computed: {
+    ...mapGetters(["filteredCouplings", "couplingsCount"]),
+    searchText: {
+      get() {
+        return this.$store.state.couplings.filter;
+      },
+      set(filter) {
+        this.$store.commit("setFilter", {
+          categorization: "couplings",
+          filter
+        });
+      }
+    }
+  },
+  components: {
+    CouplingList
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-    
+div {
+  width: 80%;
+  margin: 0 auto;
+}
+
+input {
+  margin-bottom: 20px;
+}
+
 </style>

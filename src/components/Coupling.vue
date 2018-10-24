@@ -1,9 +1,9 @@
 <template>
     <div class="wrapper">
-        <button v-if="removable" @click="removeCoupling(coupling)">Törlés</button>
+        <button v-if="removable" @click="removeCoupling(coupling)">&#215;</button>
         <div class="item">
             <h2>
-                Többlet({{ coupling.shortageProducts.length }})
+                Többlet({{ coupling.surplusProducts.length }})
             </h2>
             <product-list
                 :products="coupling.surplusProducts"
@@ -17,54 +17,77 @@
                 :products="coupling.shortageProducts"
                 :productClickHandler="!removable ? toggleProductSelection('shortage') : () => {}"/>
         </div>
-        <hr>
-        <div class="result">
+        <div class="item">
             <h2>
-                Eredmény
+                <div class="flex">
+                    <div>
+                        Eredmény
+                    </div>
+                    <div class="result">
+                        {{ removable ? coupling.result : selectedProductsResult }}
+                    </div>
+                </div>
             </h2>
-            {{ result }}
         </div>
     </div>
 </template>
 
 <script>
-import ProductList from '@/components/ProductList';
-import { mapMutations } from 'vuex';
-
-function sumProducts(products) {
-  return products.reduce((sum, product) => sum + product.count, 0);
-}
+import ProductList from "@/components/ProductList";
+import { mapMutations, mapGetters } from "vuex";
 
 export default {
-    props: ['coupling', 'removable'],
-    components: {
-        ProductList,
-    },
-    computed: {
-        result() {
-            return sumProducts(this.coupling.surplusProducts) + sumProducts(this.coupling.shortageProducts);
-        }
-    },
-    methods: {
-        ...mapMutations([
-            'removeCoupling'
-        ]),
-        toggleProductSelection(categorization) {
-            return function(product) {
-                this.$store.commit('toggleProductSelection', { categorization, product });
-            }
-        }
-    },
-}
+  props: ["coupling", "removable"],
+  components: {
+    ProductList
+  },
+  computed: {
+    ...mapGetters(['selectedProductsResult'])
+  },
+  methods: {
+    ...mapMutations(["removeCoupling"]),
+    toggleProductSelection(categorization) {
+      return function(product) {
+        this.$store.commit("toggleProductSelection", {
+          categorization,
+          product
+        });
+      };
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-    .wrapper {
-        border: 1px solid black;
-    }
+button {
+  padding: 0;
+  width: 34px;
+  height: 34px;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
 
-    .item {
-        background-color: yellow;
-    }
+.wrapper {
+  position: relative;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+}
+
+.item {
+  h2 {
+    background-color: #111;
+    color: #fff;
+    text-align: center;
+    padding: 5px;
+  }
+}
+
+.flex {
+  display: flex;
+}
+
+.result {
+  margin-left: auto;
+}
 </style>
 

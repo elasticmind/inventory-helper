@@ -10,38 +10,39 @@
 
 <script>
 export default {
-    props: ['product', 'clickHandler'],
-    computed: {
-        tooltip() {
-            const joinedPath = this.product.path.join('\\');
-            return (
-`Termék azonosító: ${this.product.id}
+  props: ["product", "clickHandler"],
+  computed: {
+    tooltip() {
+      const joinedPath = this.product.path.join("\\");
+      return `Termék azonosító: ${this.product.id}
 Kategória azonosító: ${this.product.categoryId}
-Kategória: ${joinedPath}`
-            );
-        }
-    },
-}
+Kategória: ${joinedPath}`;
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-    .item {
-        display: flex;
-        position: relative;
-    }
+.item {
+  display: flex;
+  position: relative;
+  padding: 5px;
+}
 
-    .hover-highlight:hover::after {
-        content: '';
-        display: block;
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        background-color: rgba(0, 0, 0, 0.1);
-    }
+.hover-highlight:hover {
+  cursor: pointer;
+  background: linear-gradient(left, rgba(98, 255, 150, 0.8), rgba(98, 255, 150, 0.4));
+  
+  .product-label {
+    color: #222;
+  }
 
-    .product-count {
-        margin-left: auto;
-    }
+  .product-count {
+    color: #fff;
+  }
+}
+
+.product-count {
+  margin-left: auto;
+}
 </style>

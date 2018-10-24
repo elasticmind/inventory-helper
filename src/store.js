@@ -42,8 +42,6 @@ export default new Vuex.Store({
       return getters.products(categorization).length;
     },
     filteredProducts: (state, getters) => (categorization) => {
-      console.log('státe', state);
-      console.log('lö categorization', categorization);
       return searchProducts(
         getters.products(categorization),
         `${state.preFilter} ${getters.filter(categorization)}`
@@ -53,13 +51,19 @@ export default new Vuex.Store({
       return state.surplus.selected.length + state.shortage.selected.length > 0;
     },
     couplingsCount: (state) => {
-      return state.couplings.length;
+      return state.couplings.items.length;
     },
     filteredCouplings: (state) => {
       return state.couplings.items.filter((coupling) => {
         return hasProducts(coupling.surplusProducts, state.couplings.filter.toLowerCase())
           || hasProducts(coupling.shortageProducts, state.couplings.filter.toLowerCase());
       });
+    },
+    selectedProductsResult: (state) => {
+      return (
+        sumProducts(state.surplus.selected) +
+        sumProducts(state.shortage.selected)
+      );
     }
   },
   mutations: {
@@ -69,20 +73,11 @@ export default new Vuex.Store({
     setPreFilter: (state, { filter }) => {
       state.preFilter = filter;
     },
-    toggleProductSelection: (state, {categorization, product}) => {
+    toggleProductSelection: (state, { categorization, product }) => {
       toggleSelection(state[categorization].products, product);
       toggleSelection(state[categorization].selected, product);
       sortProducts(state[categorization].products);
       sortProducts(state[categorization].selected);
-    },
-    addCoupling: (state) => {
-      state.couplings.items.push({
-        surplusProducts: state.surplus.selected,
-        shortageProducts: state.shortage.selected,
-      });
-
-      state.surplus.selected = [];
-      state.shortage.selected = [];
     },
     removeCoupling: (state, coupling) => {
       var index;
@@ -96,18 +91,28 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    toggleProductsSelection: ({commit}, {categorization, products}) => {
+    toggleProductsSelection: ({ commit }, { categorization, products }) => {
       products.forEach((product) => {
-        commit('toggleProductSelection', {categorization, product})
+        commit('toggleProductSelection', { categorization, product })
       });
     },
-    addFilteredProducts: ({getters, dispatch}, categorization) => {
+    addFilteredProducts: ({ getters, dispatch }, categorization) => {
       console.log('durvul', categorization);
       var products = getters.filteredProducts(categorization);
       dispatch('toggleProductsSelection', {
         categorization,
         products,
       })
+    },
+    addCoupling: ({ state, getters }) => {
+      state.couplings.items.push({
+        surplusProducts: state.surplus.selected,
+        shortageProducts: state.shortage.selected,
+        result: getters.selectedProductsResult,
+      });
+
+      state.surplus.selected = [];
+      state.shortage.selected = [];
     },
   },
 })
@@ -119,4 +124,8 @@ function toggleSelection(array, item) {
   } else {
     array.push(item);
   }
+}
+
+function sumProducts(products) {
+  return products.reduce((sum, product) => sum + product.count, 0);
 }
