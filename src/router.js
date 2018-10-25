@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Store from './views/Store.vue'
 import Couplings from './views/Couplings.vue'
+import Operations from './views/Operations.vue'
 
 Vue.use(Router)
 
@@ -12,6 +13,10 @@ export default new Router({
     {
       path: '/',
       redirect: '/store'
+    },
+    {
+      path: '/operations',
+      component: Operations
     },
     {
       path: '/store',

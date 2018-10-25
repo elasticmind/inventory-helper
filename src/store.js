@@ -5,21 +5,17 @@ Vue.use(Vuex)
 import { searchProducts, hasProducts } from '@/util/productsController';
 
 import { listProducts, sortProducts } from '@/util/dataTransformer.js'
-import shortageData from '@/data/shortage.json'
-import surplusData from '@/data/surplus.json'
-const shortage = listProducts(shortageData);
-const surplus = listProducts(surplusData);
 
 export default new Vuex.Store({
   state: {
     preFilter: '',
     surplus: {
-      products: surplus,
+      products: [],
       filter: '',
       selected: [],
     },
     shortage: {
-      products: shortage,
+      products: [],
       filter: '',
       selected: [],
     },
@@ -83,6 +79,12 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    loadSurplus: ({state}, data) => {
+      state.surplus.products = listProducts(data);
+    },
+    loadShortage: ({state}, json) => {
+      state.shortage.products = listProducts(json);
+    },
     toggleProductSelection: ({ state, getters, commit }, { categorization, product }) => {
       commit('toggleProductSelection', {categorization, product});
       // TODO: You know better than this...
