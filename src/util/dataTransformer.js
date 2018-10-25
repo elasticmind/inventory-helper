@@ -29,8 +29,22 @@ export function listProducts(data) {
     return sortProducts(traverse(data));
 }
 
-export function sortProducts(products) {
-    return products.sort((productA, productB) => {
-        return productA.label.localeCompare(productB.label);
-    });
+export function sortProducts(products, words = []) {
+    return products.sort(comparatorGenerator(words));
+}
+
+function alphabetComparator(productA, productB) {
+    return productA.label.toLowerCase().localeCompare(productB.label.toLowerCase());
+}
+
+function comparatorGenerator(words = []) {
+    function weigh(product) {
+        const productLabelWords = product.label.toLowerCase().split(' ');
+        const joinedWords = [...words, ...productLabelWords];
+        return joinedWords.length - (new Set(joinedWords)).size;
+    }
+
+    return function comparator(productA, productB) {
+        return weigh(productB) - weigh(productA) || alphabetComparator(productA, productB);
+    }
 }

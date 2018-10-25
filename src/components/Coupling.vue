@@ -34,7 +34,7 @@
 
 <script>
 import ProductList from "@/components/ProductList";
-import { mapMutations, mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   props: ["coupling", "removable"],
@@ -45,10 +45,10 @@ export default {
     ...mapGetters(['selectedProductsResult'])
   },
   methods: {
-    ...mapMutations(["removeCoupling"]),
+    ...mapActions(["removeCoupling"]),
     toggleProductSelection(categorization) {
       return function(product) {
-        this.$store.commit("toggleProductSelection", {
+        this.$store.dispatch("toggleProductSelection", {
           categorization,
           product
         });

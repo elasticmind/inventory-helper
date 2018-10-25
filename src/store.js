@@ -64,7 +64,11 @@ export default new Vuex.Store({
         sumProducts(state.surplus.selected) +
         sumProducts(state.shortage.selected)
       );
-    }
+    },
+    selectedSurplusProductsLabelWords: (state) => {
+      return state.surplus.selected
+        .reduce((words, product) => [...words, ...product.label.toLowerCase().split(' ')], []);
+    },
   },
   mutations: {
     setFilter: (state, { categorization, filter }) => {
@@ -73,31 +77,37 @@ export default new Vuex.Store({
     setPreFilter: (state, { filter }) => {
       state.preFilter = filter;
     },
-    toggleProductSelection: (state, { categorization, product }) => {
+    toggleProductSelection: ( state, { categorization, product }) => {
       toggleSelection(state[categorization].products, product);
       toggleSelection(state[categorization].selected, product);
+    },
+  },
+  actions: {
+    toggleProductSelection: ({ state, getters, commit }, { categorization, product }) => {
+      commit('toggleProductSelection', {categorization, product});
+      // TODO: You know better than this...
       sortProducts(state[categorization].products);
+      if (categorization === 'surplus') {
+        sortProducts(state.shortage.products, getters.selectedSurplusProductsLabelWords);
+      }
       sortProducts(state[categorization].selected);
     },
-    removeCoupling: (state, coupling) => {
+    removeCoupling: ({ state, getters }, coupling) => {
       var index;
       if (~(index = state.couplings.items.indexOf(coupling))) {
         state.couplings.items.splice(index, 1);
         state.surplus.products.push(...coupling.surplusProducts);
         state.shortage.products.push(...coupling.shortageProducts);
         sortProducts(state.surplus.products);
-        sortProducts(state.shortage.products);
+        sortProducts(state.shortage.products, getters.selectedSurplusProductsLabelWords);
       }
     },
-  },
-  actions: {
     toggleProductsSelection: ({ commit }, { categorization, products }) => {
       products.forEach((product) => {
         commit('toggleProductSelection', { categorization, product })
       });
     },
     addFilteredProducts: ({ getters, dispatch }, categorization) => {
-      console.log('durvul', categorization);
       var products = getters.filteredProducts(categorization);
       dispatch('toggleProductsSelection', {
         categorization,

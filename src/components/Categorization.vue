@@ -46,7 +46,7 @@ export default {
   methods: {
     toggleProductSelection(categorization) {
       return function(product) {
-        this.$store.commit("toggleProductSelection", {
+        this.$store.dispatch("toggleProductSelection", {
           categorization,
           product
         });
