@@ -49,6 +49,23 @@ function comparatorGenerator(words = []) {
     }
 }
 
-export function exportFormat(data) {
-    return JSON.stringify(data, null, 2);
+export function exportFormat(couplings, separator = ',', newLine = '\n') {
+    var result = '';
+
+    couplings.forEach((coupling) => {
+        coupling.surplusProducts.forEach((product) => {
+            result += formatProduct(product) + newLine;
+        })
+        coupling.shortageProducts.forEach((product) => {
+            result += formatProduct(product) + newLine;
+        })
+        result += `${separator}${separator}${coupling.result}` + newLine;
+        result += newLine;
+    });
+
+    return result;
+    
+    function formatProduct(product) {
+        return `${product.id}${separator}${product.label}${separator}${product.count}`;
+    }
 }
