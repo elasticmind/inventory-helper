@@ -52,8 +52,11 @@ export default new Vuex.Store({
     isProductSelected: (state) => {
       return state.surplus.selected.length + state.shortage.selected.length > 0;
     },
-    couplingsCount: (state) => {
-      return state.couplings.items.length;
+    couplingsItems: (state) => {
+      return state.couplings.items;
+    },
+    couplingsCount: (state, getters) => {
+      return getters.couplingsItems.length;
     },
     filteredCouplings: (state) => {
       return state.couplings.items.filter((coupling) => {

@@ -48,3 +48,7 @@ function comparatorGenerator(words = []) {
         return weigh(productB) - weigh(productA) || alphabetComparator(productA, productB);
     }
 }
+
+export function exportFormat(data) {
+    return JSON.stringify(data, null, 2);
+}
