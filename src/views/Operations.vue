@@ -1,25 +1,47 @@
 <template>
   <div>
-    <label for="loadSurplus">
-      Többlet fájl:
-      <input type="file" id="loadSurplus" @change="loadFile($event, 'loadSurplus')" >
-    </label>
-    <br>
-    <label for="loadShortage">
-      Hiány fájl:
-      <input type="file" id="loadShortage" @change="loadFile($event, 'loadShortage')" >
-    </label>
-    <br>
-    <br>
-    <button @click="saveStore">Állapot mentése</button>
-    <br>
-    <label for="loadStore">
-      Állapot betöltése:
-      <input type="file" id="loadStore" @change="loadStore($event)" >
-    </label>
-    <br>
-    <br>
-    <button @click="saveCouplings">Összevonások mentése</button>
+    <table>
+      <tr>
+        <td>
+          <label for="loadSurplus">
+            Többlet fájl:
+          </label>
+        </td>
+        <td>
+          <input type="file" id="loadSurplus" @change="loadFile($event, 'loadSurplus')" >
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="loadShortage">
+            Hiány fájl:
+          </label>
+        </td>
+        <td>
+          <input type="file" id="loadShortage" @change="loadFile($event, 'loadShortage')" >
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <button @click="saveStore">Állapot mentése</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="loadStore">
+            Állapot betöltése:
+          </label>
+        </td>
+        <td>
+          <input type="file" id="loadStore" @change="loadStore($event)" >
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <button @click="saveCouplings">Összevonások mentése</button>
+        </td>
+      </tr>
+    </table>
   </div>
 </template>
 
