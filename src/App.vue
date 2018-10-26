@@ -9,42 +9,37 @@
 
 <script>
 import Navigation from "@/components/Navigation";
+import surplusData from "@/data/surplus.json";
+import shortageData from "@/data/shortage.json";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   components: {
     Navigation
+  },
+  computed: {
+    ...mapGetters(['isCouplingAddable'])
+  },
+  mounted() {
+    this.$store.dispatch("loadSurplus", surplusData);
+    this.$store.dispatch("loadShortage", shortageData);
+
+    window.addEventListener("keyup", this.enterHandler);
+  },
+  destroyed() {
+    window.removeEventListener("keyup", this.enterHandler);
+  },
+  methods: {
+    ...mapActions(["addCoupling"]),
+    enterHandler(event) {
+      if (event.keyCode === 13) {
+        if (this.isCouplingAddable) {
+          this.addCoupling();
+        }
+      }
+    }
   }
 };
-
-/*
-// TODO
-function saveTextAsFile()
-{
-    var textToWrite = document.getElementById("inputTextToSave").value;
-    var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
-    var fileNameToSaveAs = document.getElementById("inputFileNameToSaveAs").value;
-      var downloadLink = document.createElement("a");
-    downloadLink.download = fileNameToSaveAs;
-    downloadLink.innerHTML = "Download File";
-    if (window.webkitURL != null)
-    {
-        // Chrome allows the link to be clicked
-        // without actually adding it to the DOM.
-        downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
-    }
-    else
-    {
-        // Firefox requires the link to be added to the DOM
-        // before it can be clicked.
-        downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
-        downloadLink.onclick = destroyClickedElement;
-        downloadLink.style.display = "none";
-        document.body.appendChild(downloadLink);
-    }
-
-    downloadLink.click();
-}
- */
 </script>
 
 

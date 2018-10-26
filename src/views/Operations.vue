@@ -5,7 +5,7 @@
       <input type="file" id="loadSurplus" @change="loadFile($event, 'loadSurplus')" >
     </label>
     <br>
-    <label for="loadSurplus">
+    <label for="loadShortage">
       Hiány fájl:
       <input type="file" id="loadShortage" @change="loadFile($event, 'loadShortage')" >
     </label>

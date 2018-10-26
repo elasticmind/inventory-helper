@@ -19,7 +19,7 @@
             <button @click="() => addFilteredProducts('shortage')">Összes hozzáadása</button>
         </div>
         <coupling class="coupling" :coupling="coupling" />
-        <button @click="addCoupling" :disabled="!isProductSelected || !selectionPasses">Összevon</button>
+        <button @click="addCoupling" :disabled="!isCouplingAddable">Összevon</button>
     </div>
 </template>
 
@@ -39,7 +39,8 @@ export default {
     ...mapGetters([
       "selectedProducts",
       "selectedProductsResult",
-      "isProductSelected"
+      "isProductSelected",
+      "isCouplingAddable"
     ]),
     coupling() {
       return {
@@ -55,9 +56,6 @@ export default {
         this.$store.commit("setPreFilter", { filter });
       }
     },
-    selectionPasses() {
-      return this.selectedProductsResult <= 0;
-    }
   },
   watch: {
     isProductSelected(changedTo) {

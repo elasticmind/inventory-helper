@@ -28,6 +28,12 @@ export default new Vuex.Store({
     products: (state) => (categorization) => {
       return state[categorization].products;
     },
+    isSurplusLeft: (state) => {
+      return state.surplus.products.length > 0;
+    },
+    surplusHead: (state) => {
+      return state.surplus.products[0] || {};
+    },
     selectedProducts: (state) => (categorization) => {
       return state[categorization].selected;
     },
@@ -61,10 +67,13 @@ export default new Vuex.Store({
         sumProducts(state.shortage.selected)
       );
     },
-    selectedSurplusProductsLabelWords: (state) => {
-      return state.surplus.selected
+    selectedProductsLabelWords: (state) => {
+      return [...state.surplus.selected, ...state.shortage.selected]
         .reduce((words, product) => [...words, ...product.label.toLowerCase().split(' ')], []);
     },
+    isCouplingAddable: (state, getters) => {
+      return getters.isProductSelected && getters.selectedProductsResult <= 0;
+    }
   },
   mutations: {
     setFilter: (state, { categorization, filter }) => {
@@ -85,13 +94,18 @@ export default new Vuex.Store({
     loadShortage: ({state}, json) => {
       state.shortage.products = listProducts(json);
     },
+    addFirstSurplus: ({ getters, dispatch }) => {
+      if (getters.isSurplusLeft) {
+        dispatch('toggleProductSelection', {
+          categorization: 'surplus',
+          product: getters.surplusHead,
+        });
+      }
+    },
     toggleProductSelection: ({ state, getters, commit }, { categorization, product }) => {
       commit('toggleProductSelection', {categorization, product});
-      // TODO: You know better than this...
-      sortProducts(state[categorization].products);
-      if (categorization === 'surplus') {
-        sortProducts(state.shortage.products, getters.selectedSurplusProductsLabelWords);
-      }
+      sortProducts(state.surplus.products, getters.selectedProductsLabelWords);
+      sortProducts(state.shortage.products, getters.selectedProductsLabelWords);
       sortProducts(state[categorization].selected);
     },
     removeCoupling: ({ state, getters }, coupling) => {
@@ -100,7 +114,7 @@ export default new Vuex.Store({
         state.couplings.items.splice(index, 1);
         state.surplus.products.push(...coupling.surplusProducts);
         state.shortage.products.push(...coupling.shortageProducts);
-        sortProducts(state.surplus.products);
+        sortProducts(state.surplus.products, getters.selectedSurplusProductsLabelWords);
         sortProducts(state.shortage.products, getters.selectedSurplusProductsLabelWords);
       }
     },
@@ -116,7 +130,7 @@ export default new Vuex.Store({
         products,
       })
     },
-    addCoupling: ({ state, getters }) => {
+    addCoupling: ({ state, getters, dispatch }) => {
       state.couplings.items.push({
         surplusProducts: state.surplus.selected,
         shortageProducts: state.shortage.selected,
@@ -125,6 +139,8 @@ export default new Vuex.Store({
 
       state.surplus.selected = [];
       state.shortage.selected = [];
+
+      dispatch('addFirstSurplus');
     },
   },
 })
