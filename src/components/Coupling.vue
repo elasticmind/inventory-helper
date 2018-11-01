@@ -2,23 +2,23 @@
     <div class="wrapper">
         <button v-if="removable" @click="removeCoupling(coupling)">&#215;</button>
         <div class="item">
-            <h2>
+            <h3>
                 Többlet({{ coupling.surplusProducts.length }})
-            </h2>
+            </h3>
             <product-list
                 :products="coupling.surplusProducts"
                 :productClickHandler="!removable ? toggleProductSelection('surplus') : () => {}"/>
         </div>
         <div class="item">
-            <h2>
+            <h3>
                 Hiány({{ coupling.shortageProducts.length }})
-            </h2>
+            </h3>
             <product-list
                 :products="coupling.shortageProducts"
                 :productClickHandler="!removable ? toggleProductSelection('shortage') : () => {}"/>
         </div>
         <div class="item">
-            <h2>
+            <h3>
                 <div class="flex">
                     <div>
                         Eredmény
@@ -27,7 +27,7 @@
                         {{ removable ? coupling.result.countDiff : selectedProductsResult.countDiff }}
                     </div>
                 </div>
-            </h2>
+            </h3>
         </div>
     </div>
 </template>
@@ -74,11 +74,11 @@ button {
 }
 
 .item {
-  h2 {
-    background-color: #111;
+  h3 {
+    background: linear-gradient(to top right, #111, #222, #111);
     color: #fff;
     text-align: center;
-    padding: 5px;
+    padding: 5px 15px;
   }
 }
 

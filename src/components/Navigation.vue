@@ -21,7 +21,6 @@ nav {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 20px;
   background-color: #444;
 }
 

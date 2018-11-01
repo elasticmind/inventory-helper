@@ -23,8 +23,9 @@ export default {
 ul {
     background-color: #444;
     padding: 10px;
-    max-height: 50vh;
+    max-height: 200px;
     overflow: auto;
+    box-shadow: 0 -10px 20px -10px rgba(0, 0, 0, 0.5) inset;
 }
 
 li {

@@ -1,5 +1,5 @@
 <template>
-    <div class="categorization">
+    <div>
         <h2 class="title">{{ title }}({{ productsCount(categorization) }})</h2>
         <div class="filter-wrapper">
           <input type="checkbox" v-model="persistSearch">
@@ -69,11 +69,6 @@ export default {
 <style lang="scss" scoped>
 .title {
   text-align: center;
-  margin: 10px 0;
   color: #eee;
-}
-
-.categorization {
-    padding: 10px;
 }
 </style>

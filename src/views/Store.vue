@@ -14,12 +14,12 @@
                 categorization="shortage"
                 class="half-pane" />
         </div>
-        <div class="flex">
+        <div class="flex margin-v">
             <button @click="() => addFilteredProducts('surplus')">Összes hozzáadása</button>
             <button @click="() => addFilteredProducts('shortage')">Összes hozzáadása</button>
         </div>
         <coupling class="coupling" :coupling="coupling" />
-        <button @click="addCoupling" :disabled="!isCouplingAddable">Összevon</button>
+        <button @click="addCoupling" class="margin-v" :disabled="!isCouplingAddable">Összevon</button>
     </div>
 </template>
 
@@ -80,7 +80,6 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  margin-bottom: 20px;
 }
 
 .half-pane {
@@ -89,12 +88,16 @@ export default {
 
 .prefilter-wrapper {
   width: 500px;
-  margin-bottom: 20px;
 }
 
 .coupling {
   width: 80%;
-  margin: 0 auto 20px;
+  margin: 0 auto 10px;
+}
+
+.margin-v {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 button {

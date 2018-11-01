@@ -78,7 +78,7 @@ input[type="checkbox"] {
 
 .filter-wrapper {
   height: 40px;
-  margin: 0 auto 20px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   width: 80%;
