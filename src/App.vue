@@ -9,8 +9,6 @@
 
 <script>
 import Navigation from "@/components/Navigation";
-import surplusData from "@/data/surplus.json";
-import shortageData from "@/data/shortage.json";
 import { mapActions, mapGetters } from "vuex";
 
 export default {
@@ -21,9 +19,6 @@ export default {
     ...mapGetters(['isCouplingAddable'])
   },
   mounted() {
-    this.$store.dispatch("loadSurplus", surplusData);
-    this.$store.dispatch("loadShortage", shortageData);
-
     window.addEventListener("keyup", this.enterHandler);
   },
   destroyed() {
