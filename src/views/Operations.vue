@@ -23,7 +23,12 @@
       </tr>
       <tr>
         <td>
-          <button @click="saveStore">Állapot mentése</button>
+          <label for="saveStore">
+            Állapot mentése:
+          </label>
+        </td>
+        <td>
+          <button id="saveStore" @click="saveStore">Mentés</button>
         </td>
       </tr>
       <tr>
@@ -38,7 +43,12 @@
       </tr>
       <tr>
         <td>
-          <button @click="saveCouplings">Összevonások mentése</button>
+          <label for="saveCouplings">
+            Összevonások mentése:
+          </label>
+        </td>
+        <td>
+          <button id="saveCouplings" @click="saveCouplings">Mentés</button>
         </td>
       </tr>
     </table>
@@ -67,7 +77,7 @@ export default {
       reader.readAsText(file);
     },
     saveStore() {
-      saveText(JSON.stringify(this.$store.state, null, 2), 'progress');
+      saveText(JSON.stringify(this.$store.state, null, 2), 'progress.json');
     },
     loadStore(event) {
       const file = event.target.files[0];
@@ -91,5 +101,22 @@ div {
   width: 80%;
   margin: 0 auto;
   color: #eee;
+}
+
+button {
+  min-width: 87px;
+}
+
+table {
+  width: 100%;
+}
+
+tr {
+  height: 40px;
+
+  & td:first-child {
+    text-align: right;
+    padding-right: 10px;
+  }
 }
 </style>

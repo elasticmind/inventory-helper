@@ -39,7 +39,7 @@ export default {
 
 
 <style lang="scss">
-* {
+*:not(button) {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -51,9 +51,13 @@ ul {
   list-style-type: none;
 }
 
-html:root {
-  font-size: 20px;
-  background-color: #222;
+html {
+  height: 100vh;
+
+  &:root {
+    font-size: 14px;
+    background-color: #222;
+  }
 }
 
 input[type="text"] {
@@ -70,14 +74,6 @@ input[type="text"] {
 input[type="checkbox"] {
   width: 40px;
   transform: scale(1.5);
-}
-
-button {
-  font-size: 1.1rem;
-  padding: 5px 20px;
-  border-radius: 1000px;
-  border: none;
-  cursor: pointer;
 }
 
 .filter-wrapper {
