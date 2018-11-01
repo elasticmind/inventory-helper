@@ -31,7 +31,7 @@ Kategória: ${joinedPath}`;
 
 .hover-highlight:hover {
   cursor: pointer;
-  background: linear-gradient(left, rgba(98, 255, 150, 0.8), rgba(98, 255, 150, 0.4));
+  background: linear-gradient(to left, rgba(98, 255, 150, 0.8), rgba(98, 255, 150, 0.4));
   
   .product-label {
     color: #222;
