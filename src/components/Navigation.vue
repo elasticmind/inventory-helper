@@ -18,20 +18,18 @@ export default {
 
 <style lang="scss" scoped>
 nav {
-  height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
+  background-color: #444;
 }
 
 .nav-item {
   color: #fff;
   text-decoration: none;
-  margin: 0 20px;
   padding: 5px 20px;
   width: 300px;
-  height: 40px;
   text-align: center;
   font-size: 1.2rem;
   text-transform: uppercase;
