@@ -4,8 +4,8 @@ export default function saveText(text, fileName) {
 
     downloadLink.download = fileName;
 
-    if (window.webkitURL != null) {
-        downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+    if (window.URL != null) {
+        downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
         downloadLink.click();
     } else {
       alert('This browser does not support webkitURL!');
