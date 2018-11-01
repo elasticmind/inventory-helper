@@ -76,8 +76,8 @@ function transformText(text) {
     function parseValueLine(line) {
         const match = /\d{2}(-?\d+\.\d{3})-?\d+\.\d{2}-?\d+\.\d{2}(-?\d+\.\d{2})$/.exec(line);
         return {
-            productCount: match[1],
-            productValue: match[2],
+            productCount: Number(match[1]),
+            productValue: Number(match[2]),
         };
     }
 
