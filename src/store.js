@@ -125,9 +125,11 @@ export default new Vuex.Store({
   actions: {
     loadSurplus: ({state}, data) => {
       state.surplus.products = data;
+      sortProducts(state.surplus.products);
     },
     loadShortage: ({state}, data) => {
       state.shortage.products = data;
+      sortProducts(state.shortage.products);
     },
     addFirstSurplus: ({ getters, dispatch }) => {
       if (getters.isSurplusLeft) {

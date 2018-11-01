@@ -14,7 +14,9 @@ function comparatorGenerator(words = []) {
     }
 
     return function comparator(productA, productB) {
-        return weigh(productB) - weigh(productA) || alphabetComparator(productA, productB);
+        return words.length
+            ? weigh(productB) - weigh(productA) || alphabetComparator(productA, productB)
+            : alphabetComparator(productA, productB);
     }
 }
 
