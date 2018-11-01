@@ -77,12 +77,12 @@ export default new Vuex.Store({
       const shortageValueSum = valueSum(state.shortage.selected);
 
       return {
-        surplusCountSum,
-        shortageCountSum,
-        countDiff: surplusCountSum + shortageCountSum,
-        surplusValueSum,
-        shortageValueSum,
-        valueDiff: valueDiff(surplusValueSum, shortageValueSum),
+        surplusCountSum: surplusCountSum.toFixed(3),
+        shortageCountSum: shortageCountSum.toFixed(3),
+        countDiff: (surplusCountSum + shortageCountSum).toFixed(3),
+        surplusValueSum: surplusValueSum.toFixed(2),
+        shortageValueSum: shortageValueSum.toFixed(2),
+        valueDiff: valueDiff(surplusValueSum, shortageValueSum).toFixed(2),
       };
     },
     selectedProductsLabelWords: (state) => {
