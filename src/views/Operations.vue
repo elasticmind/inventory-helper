@@ -80,7 +80,7 @@ export default {
       reader.readAsText(file);
     },
     saveCouplings() {
-      saveText(exportFormat(this.$store.getters.couplingsItems), 'export');
+      saveText(exportFormat(this.$store.getters.couplingsItems), 'export.csv');
     },
   }
 };

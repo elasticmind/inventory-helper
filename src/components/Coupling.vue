@@ -24,7 +24,7 @@
                         Eredmény
                     </div>
                     <div class="result">
-                        {{ removable ? coupling.result : selectedProductsResult }}
+                        {{ removable ? coupling.result.countDiff : selectedProductsResult.countDiff }}
                     </div>
                 </div>
             </h2>

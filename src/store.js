@@ -4,7 +4,7 @@ Vue.use(Vuex)
 
 import { searchProducts, hasProducts } from '@/util/productsController';
 
-import { listProducts, sortProducts } from '@/util/dataTransformer.js'
+import { sortProducts } from '@/util/dataTransformer.js'
 
 export default new Vuex.Store({
   state: {
@@ -65,17 +65,26 @@ export default new Vuex.Store({
       });
     },
     selectedProductsResult: (state) => {
-      return (
-        sumProducts(state.surplus.selected) +
-        sumProducts(state.shortage.selected)
-      );
+      const surplusCountSum = countSum(state.surplus.selected);
+      const shortageCountSum = countSum(state.shortage.selected);
+      const surplusValueSum = valueSum(state.surplus.selected);
+      const shortageValueSum = valueSum(state.shortage.selected);
+
+      return {
+        surplusCountSum,
+        shortageCountSum,
+        countDiff: surplusCountSum + shortageCountSum,
+        surplusValueSum,
+        shortageValueSum,
+        valueDiff: valueDiff(surplusValueSum, shortageValueSum),
+      };
     },
     selectedProductsLabelWords: (state) => {
       return [...state.surplus.selected, ...state.shortage.selected]
-        .reduce((words, product) => [...words, ...product.label.toLowerCase().split(' ')], []);
+        .reduce((words, product) => [...words, ...product.productLabel.toLowerCase().split(' ')], []);
     },
     isCouplingAddable: (state, getters) => {
-      return getters.isProductSelected && getters.selectedProductsResult <= 0;
+      return getters.isProductSelected && getters.selectedProductsResult.countDiff <= 0;
     }
   },
   mutations: {
@@ -92,10 +101,10 @@ export default new Vuex.Store({
   },
   actions: {
     loadSurplus: ({state}, data) => {
-      state.surplus.products = listProducts(data);
+      state.surplus.products = data;
     },
-    loadShortage: ({state}, json) => {
-      state.shortage.products = listProducts(json);
+    loadShortage: ({state}, data) => {
+      state.shortage.products = data;
     },
     addFirstSurplus: ({ getters, dispatch }) => {
       if (getters.isSurplusLeft) {
@@ -121,9 +130,9 @@ export default new Vuex.Store({
         sortProducts(state.shortage.products, getters.selectedSurplusProductsLabelWords);
       }
     },
-    toggleProductsSelection: ({ commit }, { categorization, products }) => {
+    toggleProductsSelection: ({ dispatch }, { categorization, products }) => {
       products.forEach((product) => {
-        commit('toggleProductSelection', { categorization, product })
+        dispatch('toggleProductSelection', { categorization, product })
       });
     },
     addFilteredProducts: ({ getters, dispatch }, categorization) => {
@@ -157,6 +166,21 @@ function toggleSelection(array, item) {
   }
 }
 
-function sumProducts(products) {
-  return products.reduce((sum, product) => sum + product.count, 0);
+function sumProductsField(products, field) {
+  return products.reduce((sum, product) => sum + product[field], 0);
+}
+
+function countSum(products) {
+  return sumProductsField(products, 'productCount');
+}
+
+function valueSum(products) {
+  return sumProductsField(products, 'productValue');
+}
+
+function valueDiff(surplusValueSum, shortageValueSum) {
+  return Math.min(
+    Math.abs(surplusValueSum),
+    Math.abs(shortageValueSum)
+  );
 }

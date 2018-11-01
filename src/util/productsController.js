@@ -4,7 +4,7 @@ export function searchProducts(products, searchTerm) {
         .map((word) => word.toLowerCase());
 
     return products.filter((product) => {
-        const label = product.label.toLowerCase();
+        const label = product.productLabel.toLowerCase();
         return searchTexts.every((searchText) => label.includes(searchText));
     });
 }
