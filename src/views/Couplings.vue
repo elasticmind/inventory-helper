@@ -39,7 +39,7 @@ div {
 }
 
 input {
-  margin-bottom: 20px;
+  margin: 20px 0;
 }
 
 </style>

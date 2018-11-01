@@ -61,8 +61,8 @@ export default {
 <style lang="scss" scoped>
 button {
   padding: 0;
-  width: 34px;
-  height: 34px;
+  width: 20px;
+  height: 20px;
   position: absolute;
   right: 5px;
   top: 5px;
