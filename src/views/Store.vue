@@ -29,13 +29,8 @@ import Categorization from "@/components/Categorization";
 import Coupling from "@/components/Coupling";
 
 export default {
-  data() {
-    return {
-      persistSearch: false
-    };
-  },
   computed: {
-    ...mapState(["preFilter"]),
+    ...mapState(["preFilter", "persistPreFilter"]),
     ...mapGetters([
       "selectedProducts",
       "selectedProductsResult",
@@ -56,13 +51,14 @@ export default {
         this.$store.commit("setPreFilter", { filter });
       }
     },
-  },
-  watch: {
-    isProductSelected(changedTo) {
-      if (!this.persistSearch && changedTo) {
-        this.searchText = "";
+    persistSearch: {
+      get() {
+        return this.persistPreFilter;
+      },
+      set(value) {
+        this.$store.commit("setPersistPreFilter", { value });
       }
-    }
+    },
   },
   components: {
     Categorization,

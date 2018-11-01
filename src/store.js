@@ -9,14 +9,17 @@ import { sortProducts } from '@/util/dataTransformer.js'
 export default new Vuex.Store({
   state: {
     preFilter: '',
+    persistPreFilter: false,
     surplus: {
       products: [],
       filter: '',
+      persistFilter: false,
       selected: [],
     },
     shortage: {
       products: [],
       filter: '',
+      persistFilter: false,
       selected: [],
     },
     couplings: {
@@ -39,6 +42,9 @@ export default new Vuex.Store({
     },
     filter: (state) => (categorization) => {
       return state[categorization].filter;
+    },
+    persistFilter: (state) => (categorization) => {
+      return state[categorization].persistFilter;
     },
     productsCount: (state, getters) => (categorization) => {
       return getters.products(categorization).length;
@@ -94,9 +100,26 @@ export default new Vuex.Store({
     setPreFilter: (state, { filter }) => {
       state.preFilter = filter;
     },
+    setPersistFilter: (state, { categorization, value }) => {
+      state[categorization].persistFilter = value;
+    },
+    setPersistPreFilter: (state, { value }) => {
+      state.persistPreFilter = value;
+    },
     toggleProductSelection: ( state, { categorization, product }) => {
       toggleSelection(state[categorization].products, product);
       toggleSelection(state[categorization].selected, product);
+    },
+    resetFilters: ( state ) => {
+      if (!state.persistPreFilter) {
+        state.preFilter = '';
+      }
+      if (!state.surplus.persistFilter) {
+        state.surplus.filter = '';
+      }
+      if (!state.shortage.persistFilter) {
+        state.shortage.filter = '';
+      }
     },
   },
   actions: {
@@ -142,7 +165,7 @@ export default new Vuex.Store({
         products,
       })
     },
-    addCoupling: ({ state, getters, dispatch }) => {
+    addCoupling: ({ state, getters, commit, dispatch }) => {
       state.couplings.items.push({
         surplusProducts: state.surplus.selected,
         shortageProducts: state.shortage.selected,
@@ -152,6 +175,7 @@ export default new Vuex.Store({
       state.surplus.selected = [];
       state.shortage.selected = [];
 
+      commit('resetFilters');
       dispatch('addFirstSurplus');
     },
   },

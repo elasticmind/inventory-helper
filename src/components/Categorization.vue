@@ -19,15 +19,11 @@ import { mapGetters } from "vuex";
 
 export default {
   props: ["title", "categorization", "preFilter"],
-  data() {
-    return {
-      persistSearch: false
-    };
-  },
   computed: {
     ...mapGetters([
       "productsCount",
       "filter",
+      "persistFilter",
       "isProductSelected",
       "filteredProducts"
     ]),
@@ -41,7 +37,18 @@ export default {
           filter
         });
       }
-    }
+    },
+    persistSearch: {
+      get() {
+        return this.persistFilter(this.categorization);
+      },
+      set(value) {
+        this.$store.commit("setPersistFilter", {
+          categorization: this.categorization,
+          value
+        });
+      }
+    },
   },
   methods: {
     toggleProductSelection(categorization) {
@@ -56,13 +63,6 @@ export default {
   components: {
     ProductList
   },
-  watch: {
-    isProductSelected(changedTo) {
-      if (!this.persistSearch && changedTo) {
-        this.searchText = "";
-      }
-    }
-  }
 };
 </script>
 
