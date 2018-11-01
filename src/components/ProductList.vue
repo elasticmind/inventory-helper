@@ -1,7 +1,7 @@
 <template>
     <div>
         <ul>
-            <li class="zsuzsi" v-for="product in products" :key="product.label">
+            <li v-for="product in products" :key="product.productId">
                 <product :product="product" :clickHandler="productClickHandler" />
             </li>
         </ul>
@@ -23,6 +23,8 @@ export default {
 ul {
     background-color: #444;
     padding: 10px;
+    max-height: 50vh;
+    overflow: auto;
 }
 
 li {
