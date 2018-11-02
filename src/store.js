@@ -110,6 +110,10 @@ export default new Vuex.Store({
       toggleSelection(state[categorization].products, product);
       toggleSelection(state[categorization].selected, product);
     },
+    toggleProductsSelection: ( state, { categorization, products }) => {
+      toggleSelection(state[categorization].products, ...products);
+      toggleSelection(state[categorization].selected, ...products);
+    },
     resetFilters: ( state ) => {
       if (!state.persistPreFilter) {
         state.preFilter = '';
@@ -139,11 +143,9 @@ export default new Vuex.Store({
         });
       }
     },
-    toggleProductSelection: ({ state, getters, commit }, { categorization, product }) => {
+    toggleProductSelection: ({ commit, dispatch }, { categorization, product }) => {
       commit('toggleProductSelection', {categorization, product});
-      sortProducts(state.surplus.products, getters.selectedProductsLabelWords);
-      sortProducts(state.shortage.products, getters.selectedProductsLabelWords);
-      sortProducts(state[categorization].selected);
+      dispatch('resort', categorization);
     },
     removeCoupling: ({ state, getters }, coupling) => {
       var index;
@@ -155,18 +157,19 @@ export default new Vuex.Store({
         sortProducts(state.shortage.products, getters.selectedSurplusProductsLabelWords);
       }
     },
-    toggleProductsSelection: ({ dispatch }, { categorization, products }) => {
-      products.forEach((product) => {
-        dispatch('toggleProductSelection', { categorization, product })
-      });
-    },
-    addFilteredProducts: ({ getters, dispatch }, categorization) => {
+    addFilteredProducts: ({ getters, commit, dispatch }, categorization) => {
       var products = getters.filteredProducts(categorization);
-      dispatch('toggleProductsSelection', {
+      commit('toggleProductsSelection', {
         categorization,
         products,
       })
+      dispatch('resort', categorization);
     },
+    resort: ({ state, getters }, categorization) => {
+      sortProducts(state.surplus.products, getters.selectedProductsLabelWords);
+      sortProducts(state.shortage.products, getters.selectedProductsLabelWords);
+      sortProducts(state[categorization].selected);
+    },    
     addCoupling: ({ state, getters, commit, dispatch }) => {
       state.couplings.items.push({
         surplusProducts: state.surplus.selected,
@@ -183,13 +186,15 @@ export default new Vuex.Store({
   },
 })
 
-function toggleSelection(array, item) {
+function toggleSelection(array, ...items) {
   var index;
-  if (~(index = array.indexOf(item))) {
-    array.splice(index, 1);
-  } else {
-    array.push(item);
-  }
+  items.forEach(item => {
+    if (~(index = array.indexOf(item))) {
+      array.splice(index, 1);
+    } else {
+      array.push(item);
+    }
+  })
 }
 
 function sumProductsField(products, field) {
