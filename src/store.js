@@ -31,13 +31,13 @@ export default new Vuex.Store({
     products: (state) => (categorization) => {
       return state[categorization].products;
     },
-    isCouplableSurplusLeft: (state) => {
-      return state.surplus.products
+    isCouplableSurplusLeft: (state, getters) => {
+      return getters.filteredProducts('surplus')
         .filter(product => product.couplable)
         .length > 0;
     },
-    surplusHead: (state) => {
-      return state.surplus.products[0] || {};
+    surplusHead: (state, getters) => {
+      return getters.filteredProducts('surplus')[0] || {};
     },
     selectedProducts: (state) => (categorization) => {
       return state[categorization].selected;
@@ -196,6 +196,7 @@ export default new Vuex.Store({
 
       commit('resetFilters');
       dispatch('addFirstSurplus');
+      dispatch('resort');
     },
   },
 })
