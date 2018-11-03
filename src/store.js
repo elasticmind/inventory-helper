@@ -87,7 +87,11 @@ export default new Vuex.Store({
     },
     selectedProductsLabelWords: (state) => {
       return [...state.surplus.selected, ...state.shortage.selected]
-        .reduce((words, product) => [...words, ...product.productLabel.toLowerCase().split(' ')], []);
+        .reduce((words, product) => [
+          ...words,
+          ...product.categoryPath.toLowerCase().split('\\ '),
+          ...product.productLabel.toLowerCase().split(' ')
+        ], []);
     },
     isCouplingAddable: (state, getters) => {
       return getters.isProductSelected && getters.selectedProductsResult.countDiff <= 0;
