@@ -94,7 +94,7 @@ export default new Vuex.Store({
         ], []);
     },
     isCouplingAddable: (state, getters) => {
-      return getters.isProductSelected && getters.selectedProductsResult.countDiff <= 0;
+      return getters.isProductSelected;
     }
   },
   mutations: {
