@@ -4,7 +4,7 @@ Vue.use(Vuex)
 
 import { searchProducts, hasProducts } from '@/util/productsController';
 
-import { sortProducts } from '@/util/dataTransformer.js'
+import { sortProducts, mapPureData } from '@/util/dataTransformer.js'
 
 export default new Vuex.Store({
   state: {
@@ -31,8 +31,10 @@ export default new Vuex.Store({
     products: (state) => (categorization) => {
       return state[categorization].products;
     },
-    isSurplusLeft: (state) => {
-      return state.surplus.products.length > 0;
+    isCouplableSurplusLeft: (state) => {
+      return state.surplus.products
+        .filter(product => product.couplable)
+        .length > 0;
     },
     surplusHead: (state) => {
       return state.surplus.products[0] || {};
@@ -129,27 +131,34 @@ export default new Vuex.Store({
         state.shortage.filter = '';
       }
     },
+    toggleCouplable: (state, product) => {
+      product.couplable = !product.couplable;
+    }
   },
   actions: {
     loadSurplus: ({state}, data) => {
-      state.surplus.products = data;
+      state.surplus.products = mapPureData(data);
       sortProducts(state.surplus.products);
     },
     loadShortage: ({state}, data) => {
-      state.shortage.products = data;
+      state.shortage.products = mapPureData(data);
       sortProducts(state.shortage.products);
     },
     addFirstSurplus: ({ getters, dispatch }) => {
-      if (getters.isSurplusLeft) {
+      if (getters.isCouplableSurplusLeft) {
         dispatch('toggleProductSelection', {
           categorization: 'surplus',
           product: getters.surplusHead,
         });
       }
     },
+    toggleCouplable: ( {commit, dispatch}, product ) => {
+      commit('toggleCouplable', product);
+      dispatch('resort');
+    },
     toggleProductSelection: ({ commit, dispatch }, { categorization, product }) => {
       commit('toggleProductSelection', {categorization, product});
-      dispatch('resort', categorization);
+      dispatch('resort');
     },
     removeCoupling: ({ state, getters }, coupling) => {
       var index;
@@ -169,10 +178,11 @@ export default new Vuex.Store({
       })
       dispatch('resort', categorization);
     },
-    resort: ({ state, getters }, categorization) => {
+    resort: ({ state, getters }) => {
       sortProducts(state.surplus.products, getters.selectedProductsLabelWords);
       sortProducts(state.shortage.products, getters.selectedProductsLabelWords);
-      sortProducts(state[categorization].selected);
+      sortProducts(state.surplus.selected);
+      sortProducts(state.shortage.selected);
     },    
     addCoupling: ({ state, getters, commit, dispatch }) => {
       state.couplings.items.push({

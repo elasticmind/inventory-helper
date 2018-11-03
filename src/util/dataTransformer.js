@@ -1,3 +1,7 @@
+export function mapPureData(data) {
+    return data.map((product) => ({...product, couplable: true}));
+}
+
 export function sortProducts(products, words = []) {
     return products.sort(comparatorGenerator(words));
 }
@@ -8,15 +12,19 @@ function alphabetComparator(productA, productB) {
 
 function comparatorGenerator(words = []) {
     function weigh(product) {
+        if (!words.length) {
+            return 0;
+        }
+
         const productLabelWords = product.productLabel.toLowerCase().split(' ');
         const joinedWords = [...words, ...productLabelWords];
         return joinedWords.length - (new Set(joinedWords)).size;
     }
 
     return function comparator(productA, productB) {
-        return words.length
-            ? weigh(productB) - weigh(productA) || alphabetComparator(productA, productB)
-            : alphabetComparator(productA, productB);
+        return productB.couplable - productA.couplable
+            || weigh(productB) - weigh(productA)
+            || alphabetComparator(productA, productB);
     }
 }
 

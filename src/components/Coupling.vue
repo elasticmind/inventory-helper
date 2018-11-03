@@ -7,7 +7,7 @@
             </h3>
             <product-list
                 :products="coupling.surplusProducts"
-                :productClickHandler="!removable ? toggleProductSelection('surplus') : () => {}"/>
+                :productClickHandler="!removable ? toggleProductSelection('surplus') : null"/>
         </div>
         <div class="item">
             <h3>
@@ -15,7 +15,7 @@
             </h3>
             <product-list
                 :products="coupling.shortageProducts"
-                :productClickHandler="!removable ? toggleProductSelection('shortage') : () => {}"/>
+                :productClickHandler="!removable ? toggleProductSelection('shortage') : null"/>
         </div>
         <div class="item">
             <h3>
