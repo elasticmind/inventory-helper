@@ -1,5 +1,5 @@
 export function mapPureData(data) {
-    return data.map((product) => ({...product, couplable: true}));
+    return data.map((product) => ({ ...product, couplable: true }));
 }
 
 export function sortProducts(products, words = []) {
@@ -31,17 +31,45 @@ function comparatorGenerator(words = []) {
 export function exportFormat(couplings, separator = ',', newLine = '\n') {
     var result = '';
 
-    couplings.forEach((coupling) => {
-        coupling.surplusProducts.forEach((product) => {
-            result += formatSurplusProduct(product) + newLine;
-        })
-        coupling.shortageProducts.forEach((product) => {
-            result += formatShortageProduct(product) + newLine;
-        })
-        result += formatCouplingResult(coupling) + newLine;
-    });
+    couplings
+        .slice()
+        .sort(categoryBasedSort)
+        .forEach((coupling) => {
+            coupling.surplusProducts.forEach((product) => {
+                result += formatSurplusProduct(product) + newLine;
+            })
+            coupling.shortageProducts.forEach((product) => {
+                result += formatShortageProduct(product) + newLine;
+            })
+            result += formatCouplingResult(coupling) + newLine;
+        });
 
     return result;
+
+    function categoryBasedSort(coupling1, coupling2) {
+        function commonLengthCompare(string1, string2) {
+            const smallerLength = Math.min(string1.length, string2.length);
+            const sliced1 = string1.slice(0, smallerLength);
+            const sliced2 = string2.slice(0, smallerLength);
+
+            return sliced1.localeCompare(sliced2);
+        }
+
+        function categoryMin(products) {
+            return products.reduce(
+                (min, product) => commonLengthCompare(min, product.categoryId) <= 0 ? product.categoryId : min,
+                products[0].categoryId
+            );
+        }
+
+        const surplusCategoryMin1 = categoryMin(coupling1.surplusProducts);
+        const surplusCategoryMin2 = categoryMin(coupling2.surplusProducts);
+
+        coupling1.weight = surplusCategoryMin1;
+        coupling2.weight = surplusCategoryMin2;
+
+        return commonLengthCompare(surplusCategoryMin1, surplusCategoryMin2);
+    }
 
     function formatSurplusProduct(product) {
         return `${product.productLabel}${separator}\
